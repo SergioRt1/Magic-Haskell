@@ -1,8 +1,4 @@
-module Card
-  ( Card(..)
-  ,  rotate
-  , moveTo
-  ) where
+module Magic.Card where
 
   data Card = Card {
     name:: String
@@ -22,10 +18,12 @@ module Card
   rotate :: Card -> Card
   rotate (Card n d e u c p) = Card n d e (not u) c p
 
-
   data Power =  Power Int  Int deriving (Eq)
 
   instance Show Power where
     show (Power a b) = " Power: " ++ show a ++ " " ++ show b
 
   data CardType = Creature | Land | Enchantment | Instant deriving (Show,Eq)
+
+--  useAction :: Player -> Card -> Player
+--  useAction ()

@@ -1,11 +1,17 @@
+module Main where
 
-Deck
+import Magic
+--import Magic.Structure
 
+import System.IO
 
 
 main :: IO ()
-main = do
-  putStrLn "Welecome to Magic-Haskell"
-  putStrLn "Made by Sergio Andres Rodriguez Torres"
-  runGame [whiteDeck, redDeck]
+main = do {
+    hSetBuffering stdout NoBuffering
+  ; putStrLn "Welecome to Magic-Haskell"
+  ; putStrLn "Made by Sergio Andres Rodriguez Torres"
+  ; option <- newIORef (0 :: Int)
+  runGame
+}
 

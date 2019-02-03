@@ -4,10 +4,16 @@
 
 ## buld
 
-`git clone `
+`git clone https://github.com/SergioRt1/Magic-Haskell.git`
 
 `cd Magic`
 
 `cd CLI`
 
-`ghc --make main.hs`
+`ghc --make *.hs`
+
+## Run
+
+`./Main` en linux
+
+`Main.exe` en Windows

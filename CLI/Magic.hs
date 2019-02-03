@@ -1,15 +1,11 @@
-module Magic where
+module Magic
+(   module Magic.Card
+  , module Magic.Player
+  , module Magic.Structure
+) where
 
-  import Card
+import Magic.Card
+import Magic.Player
+import Magic.Structure
 
-  data Game = Game
-  { players :: [Player]
-  , actualStep :: Step
-  }
-
-  type Deck = [Card]
-
-  type Library = [Card]
-
-  type Cementery = [Card]
 
