@@ -4,7 +4,9 @@
 
 ## Requirements
 
-Stack 1.9
+stack 1.9
+
+cabal 1.24.2
 
 ## buld
 
@@ -13,6 +15,12 @@ Stack 1.9
 `cd Magic`
 
 `cd CLI`
+
+`cabal install random`
+
+`cabal install random-shuffle`
+
+`cabal install fclabels`
 
 `ghc --make *.hs`
 

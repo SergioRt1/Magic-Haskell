@@ -23,7 +23,7 @@ getCurrentPlayer game = (players game) !! (currentPlayer game)
 
 
 getHand :: Library -> Int -> Hand
-getHand d n = take n d
+getHand lib n = take n lib
 
 takeFromDeck :: Library -> Hand -> Library
 takeFromDeck deck hand = [ x | x <- deck, not $ elem x hand]
@@ -48,7 +48,7 @@ runGame decks = do
   nextStep game steps commandRef
   where
     game = newGame decks
-    steps = Mulligan:Mulligan:(cycle turnSteps)
+    steps = Mulligan:turnSteps ++ Mulligan:(cycle turnSteps)
 
 
 nextStep :: Game -> [Step] -> IORef Int -> IO ()
@@ -98,8 +98,6 @@ doStep :: Game -> Step -> Int -> Game
 doStep game (Beginning TakeCard) command = game
 
 --doStep game Mulligan n =
-
-
 
 --moveCardToTable :: IORef Player -> IO ()
 --moveCardToTable refPlayer = do
