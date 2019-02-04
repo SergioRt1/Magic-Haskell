@@ -8,63 +8,56 @@ import Data.IORef
 --  Game structure
 
 data Game = Game
-  { player1 :: Player
-  , player2 :: Player
-  , actualStepList :: [Step]
+  { players :: [Player]
   , currentPlayer :: Int
   }
 
 instance Show Game where
-  show (Game p1 p2 stpList currP) = show p1 ++ "\n" ++ show p2 ++ "\n" ++ "Player #" ++ show currP ++ "What do you like to do?"
+  show (Game p currP) = show p ++ "\n" ++ "Player #" ++ show currP
+
+setPlayer :: Game -> Int -> Player-> Game
+setPlayer (Game players c) n newPlayer = Game (take n players ++ [newPlayer] ++ drop (n+1) players) c
 
 getCurrentPlayer :: Game -> Player
-getCurrentPlayer game = if (currentPlayer game) == 1 then (player1 game) else (player2 game)
+getCurrentPlayer game = (players game) !! (currentPlayer game)
 
 
-type Deck = [Card]
-
-type Library = [Card]
-
-type Cementery = [Card]
-
-type Hand = [Card]
-
-getHand :: Deck -> Int -> Hand
+getHand :: Library -> Int -> Hand
 getHand d n = take n d
 
-takeFromDeck :: Deck -> Hand -> Deck
+takeFromDeck :: Library -> Hand -> Library
 takeFromDeck deck hand = [ x | x <- deck, not $ elem x hand]
 
-newGame :: [Deck] -> Game
-newGame (deck1:deck2:[]) = Game
-  { player1 = (Player 20 0 d1 (hand1) [] 1 7)
-  , player2 = (Player 20 0 d2 (hand2) [] 2 7)
-  , actualStepList = cycle turnSteps
-  , currentPlayer = 1
-  }where
-    hand1 = getHand deck1 7
-    hand2 = getHand deck2 7
-    d1 = takeFromDeck deck1 hand1
-    d2 = takeFromDeck deck2 hand2
+newPlayers :: [Library] -> [Player]
+newPlayers decks = [(Player 20 0 (library x) (hand x) [] [] (snd x) 7 False) | x <- zip decks [0..]]
+  where
+    hand x = getHand (fst x) 7
+    library x = takeFromDeck (fst x) $ hand x
+
+newGame :: [Library] -> Game
+newGame decks = Game
+  { players = newPlayers decks
+  , currentPlayer = 0
+  }
 
 -- Turn-Steps structure
 
-runGame :: [Deck] -> IO ()
+runGame :: [Library] -> IO ()
 runGame decks = do
-  nextStep game steps
+  commandRef <- newIORef (0 :: Int)      -- IO input Game -> I/O
+  nextStep game steps commandRef
   where
-    steps = cycle turnSteps
     game = newGame decks
+    steps = Mulligan:Mulligan:(cycle turnSteps)
 
 
-nextStep :: Game -> [Step] -> IO ()
-nextStep game (s:t) = do
-  commandRef <- newIORef (0 :: Int)
-  ioStep commandRef s                -- IO Part Game -> I/O
+nextStep :: Game -> [Step] -> IORef Int -> IO ()
+nextStep game (s:t) commandRef = do
+  ioStep game commandRef s
   command <- readIORef commandRef
   let nextGame = doStep game s command -- Logic part Game -> Game
   ioPost nextGame s
-  nextStep (nextGame) t
+  nextStep (nextGame) t commandRef
 
 turnSteps :: [Step]
 turnSteps =
@@ -79,7 +72,8 @@ turnSteps =
   , EndPhase
   ]
 
-data Step = Beginning BeginningStep
+data Step = Mulligan
+  | Beginning BeginningStep
   | MainPhase
   | Combat CombatStep
   | EndPhase
@@ -103,13 +97,56 @@ data CombatStep = DeclareAttackersStep
 doStep :: Game -> Step -> Int -> Game
 doStep game (Beginning TakeCard) command = game
 
+--doStep game Mulligan n =
+
+
+
+--moveCardToTable :: IORef Player -> IO ()
+--moveCardToTable refPlayer = do
+--  (Player l mana lib hand table id ini invalid) <- readIORef refPlayer
+
 
 -- I/O Stuff
 
-ioStep :: IORef Int -> Step -> IO ()
-ioStep _ (Beginning TakeCard) = do
+-- ioStep for initial I/O each step
+
+ioStep :: Game -> IORef Int -> Step -> IO ()
+ioStep _ _ (Beginning TakeCard) = do
   putStrLn $ show (Beginning TakeCard)
 
+ioStep game command Mulligan = do
+  printCards game
+  putStrLn "Do you like to do mulligan?\n0) No\n1) Yes"
+  c <- getLine
+  case validInputInt c of
+    Just n -> writeIORef command n
+    Nothing -> do
+      putStrLn "Invalid input :(, try again"
+      ioStep game command Mulligan
+
+-- ioStep Helper functions
+
+validInputInt :: String -> Maybe Int
+validInputInt s =
+  case reads s :: [(Int,String)] of
+     [(n, _)] -> Just n
+     otherwise -> Nothing
+
+printCards :: Game -> IO ()
+printCards game = do
+  let player = getCurrentPlayer game
+  putStrLn $ show player
+  putStrLn "Your hand is:"
+  printEachCard (zip (hand player) [1..])
+
+printEachCard :: [(Card, Int)] -> IO ()
+printEachCard [] = return ()
+printEachCard (x:xs) = do
+  putStrLn $ show (snd x) ++ ") " ++ show (fst x)
+  printEachCard xs
+
+
+-- ioPost for final I/O each step
 
 ioPost :: Game -> Step -> IO ()
 ioPost game (Beginning TakeCard) = do

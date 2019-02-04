@@ -7,16 +7,17 @@ module Magic.Card where
     , used :: Bool
     , cardType :: CardType
     , power :: Maybe Power
+    , manaNeed :: Maybe Int
   }
 
   instance Eq Card where
     x == y = (cardType x == cardType y) && (power x == power y)
 
   instance Show Card where
-    show (Card n d e u t p) = "Card name: " ++ n ++ " Type: " ++ show t ++ " Desc: " ++ d ++ " Exp: " ++ e
+    show (Card n d e u t p _) = "Card name: " ++ n ++ " Type: " ++ show t ++ " Desc: " ++ d ++ " Exp: " ++ e
 
   rotate :: Card -> Card
-  rotate (Card n d e u c p) = Card n d e (not u) c p
+  rotate (Card n d e u c p m) = Card n d e (not u) c p m
 
   data Power =  Power Int  Int deriving (Eq)
 
