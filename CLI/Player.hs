@@ -9,15 +9,15 @@ module Magic.Player where
   type Cementery = [Card]
 
   data Player = Player
-    { life :: Int
-    , manaPool :: Int
-    , library :: Library
-    , hand :: Hand
-    , cementery :: Cementery
-    , table :: [Card]
-    , idPlayer :: Int
-    , initialCards :: Int
-    , invalidAction :: Bool
+    { _life :: Int
+    , _manaPool :: Int
+    , _library :: Library
+    , _hand :: Hand
+    , _cementery :: Cementery
+    , _table :: [Card]
+    , _idPlayer :: Int
+    , _initialCards :: Int
+    , _invalidAction :: Bool
   }
 
   instance Show Player where

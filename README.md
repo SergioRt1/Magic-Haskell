@@ -20,7 +20,7 @@ cabal 1.24.2
 
 `cabal install random-shuffle`
 
-`cabal install fclabels`
+`cabal install lens`
 
 `ghc --make *.hs`
 

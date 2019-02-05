@@ -4,14 +4,14 @@ module Magic.Card where
     name:: String
     , description::String
     , expansion :: String
-    , used :: Bool
+    , _used :: Bool
     , cardType :: CardType
-    , power :: Maybe Power
+    , _power :: Maybe Power
     , manaNeed :: Maybe Int
   }
 
   instance Eq Card where
-    x == y = (cardType x == cardType y) && (power x == power y)
+    x == y = (cardType x == cardType y) && (_power x == _power y)
 
   instance Show Card where
     show (Card n d e u t p _) = "Card name: " ++ n ++ " Type: " ++ show t ++ " Desc: " ++ d ++ " Exp: " ++ e

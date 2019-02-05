@@ -7,10 +7,11 @@ import Magic.Library
 import System.IO
 import System.Random
 import System.Random.Shuffle
+import Data.List
 
 
 shuffleDeck :: RandomGen g => Library -> g -> Library
-shuffleDeck deck gen = shuffle' deck 3 gen
+shuffleDeck deck gen = shuffle' deck (length deck) gen
 
 main :: IO ()
 main = do
