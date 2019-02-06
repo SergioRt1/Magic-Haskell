@@ -7,5 +7,3 @@ module Magic
 import Magic.Card
 import Magic.Player
 import Magic.Structure
-
-

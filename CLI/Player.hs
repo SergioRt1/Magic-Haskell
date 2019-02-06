@@ -13,14 +13,13 @@ module Magic.Player where
     , _manaPool :: Int
     , _library :: Library
     , _hand :: Hand
-    , _cementery :: Cementery
+    , _cemetery :: Cementery
     , _table :: [Card]
     , _idPlayer :: Int
     , _initialCards :: Int
-    , _invalidAction :: Bool
   }
 
   instance Show Player where
-    show (Player l m _ _ _ _ id _ _) = "Player #" ++ show id ++ ": Life: " ++ show l ++ " ManaPool: " ++ show m
+    show (Player l m _ _ _ _ id _) = "Player #" ++ show id ++ ": Life: " ++ show l ++ " ManaPool: " ++ show m
 
 
