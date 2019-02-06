@@ -48,7 +48,7 @@ data Record = Record
   }
 
 instance Show Record where
-  show (Record p m c) = "Player#" ++ show p ++ " moved " ++ show c ++ " from "
+  show (Record p m c) = "Player #" ++ show p ++ " moved:\n    " ++ show c ++ "\n   " ++ m
 
 data Step = Mulligan MulliganStep
   | Beginning BeginningStep
@@ -164,7 +164,7 @@ doStep game (InvalidStep _) n = set steps remainingSteps game
 
 moveCard :: Game -> ((a0 -> Identity [Card])-> Player -> Identity Player) -> [Card] -> ((a1 -> Identity [Card])-> Player -> Identity Player) -> [Card] -> String -> Game
 moveCard game f1 from f2 target text = if from == [] then set steps ((InvalidStep EmptyStack):currentSteps) game
-  else Game players2 (getNextPlayer game) remainingSteps $ (Record current text card):record
+  else Game players2 (getNextPlayer game) remainingSteps $ record ++ [(Record current text card)]
     where
       card = head from
       rest = tail from
