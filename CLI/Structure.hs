@@ -1,4 +1,4 @@
-{-# LANGUAGE TemplateHaskell, TypeOperators #-}  --Language option to perform setters and getters
+{-# LANGUAGE TemplateHaskell, TypeOperators #-}  --Language option to perform lens setters and getters
 
 module Magic.Structure where
 
